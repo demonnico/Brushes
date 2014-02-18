@@ -251,11 +251,10 @@ const NSUInteger WDMaximumDimension = 2048;
     CGPoint center = WDCenterOfRect(scrollView.bounds);
     float   offset = CGRectGetWidth(scrollView.frame);
     CGSize  size;
-    int     ix = 0;
     BOOL    buildMiniCanvases = self.miniCanvases.count == 0 ? YES : NO;
     
-    for (NSDictionary *dict in self.configuration) {
-        size = [self sizeForPage:ix];
+    for (int index=0;index<self.configuration.count;index++){
+        size = [self sizeForPage:index];
         
         float percentage = [self canvasScalePercentage];
         CGRect frame = CGRectMake(0, 0, size.width * percentage, size.height * percentage);
@@ -264,7 +263,7 @@ const NSUInteger WDMaximumDimension = 2048;
         if (buildMiniCanvases) {
             miniCanvas = [[WDGradientView alloc] initWithFrame:frame];
             [scrollView addSubview:miniCanvas];
-            miniCanvas.pivot = WDAddPoints(center, CGPointMake(offset * ix, 0));
+            miniCanvas.pivot = WDAddPoints(center, CGPointMake(offset * (float)index, 0));
             
             UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] init];
             [doubleTapRecognizer addTarget:self action:@selector(handleDoubleTapGesture:)];
@@ -279,12 +278,10 @@ const NSUInteger WDMaximumDimension = 2048;
             miniCanvas.userInteractionEnabled = YES;
             [self.miniCanvases addObject:miniCanvas];
         } else {
-            miniCanvas = miniCanvases[ix];
+            miniCanvas = miniCanvases[index];
             miniCanvas.frame = frame;
-            miniCanvas.pivot = WDAddPoints(center, CGPointMake(offset * ix, 0));
+            miniCanvas.pivot = WDAddPoints(center, CGPointMake(offset * index, 0));
         }
-     
-        ix++;
     }
 }
 
